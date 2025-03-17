@@ -6,7 +6,7 @@
 
 int cudaErrorHandle(cudaError_t result)
 {
-    if (result = cudaSuccess)
+    if (result == cudaSuccess)
     {
         return 0;
     }
@@ -20,6 +20,7 @@ int cudaErrorHandle(cudaError_t result)
         std::cout << "Error: Invalid memory copy direction\n";
         return 1;
     }
+    return 2;
 }
 
 int memcpyPinned(cuComplex *h_A, cuComplex *h_B, cuComplex *h_C, cuComplex *h_alpha, cuComplex *h_beta, const cf_t *A,
@@ -37,6 +38,7 @@ int memcpyPinned(cuComplex *h_A, cuComplex *h_B, cuComplex *h_C, cuComplex *h_al
     h_alpha->y = alpha->i;
     h_beta->x = beta->r;
     h_beta->y = beta->i;
+    return 0;
 }
 
 std::pair<int, float> Arrays2Device(cuComplex *d_A, cuComplex *d_B, cuComplex *d_C, cuComplex *h_A, cuComplex *h_B,
@@ -106,17 +108,17 @@ int main(int argc, char *argv[])
     cf_t *B = (cf_t *)aligned_alloc(ALIGN, sizeof(cf_t) * K * N);
     cf_t *C = (cf_t *)aligned_alloc(ALIGN, sizeof(cf_t) * M * N);
     cuComplex *h_A, *h_B, *h_C;
-    cudaHostAlloc((void **)h_A, sizeof(cuComplex) * M * K, cudaHostAllocDefault);
-    cudaHostAlloc((void **)h_B, sizeof(cuComplex) * K * N, cudaHostAllocDefault);
-    cudaHostAlloc((void **)h_C, sizeof(cuComplex) * M * N, cudaHostAllocDefault);
+    cudaHostAlloc((void **)&h_A, sizeof(cuComplex) * M * K, cudaHostAllocDefault);
+    cudaHostAlloc((void **)&h_B, sizeof(cuComplex) * K * N, cudaHostAllocDefault);
+    cudaHostAlloc((void **)&h_C, sizeof(cuComplex) * M * N, cudaHostAllocDefault);
     cf_t alpha, beta;
     cuComplex d_alpha, d_beta;
 
     // initialize device arrays
     cuComplex *d_A, *d_B, *d_C;
-    cudaMalloc((void **)d_A, sizeof(cuComplex) * M * K);
-    cudaMalloc((void **)d_B, sizeof(cuComplex) * K * N);
-    cudaMalloc((void **)d_C, sizeof(cuComplex) * M * N);
+    cudaMalloc((void **)&d_A, sizeof(cuComplex) * M * K);
+    cudaMalloc((void **)&d_B, sizeof(cuComplex) * K * N);
+    cudaMalloc((void **)&d_C, sizeof(cuComplex) * M * N);
 
     // initialize results
     std::vector<double> ms_results, memcpy_d2h_results, memcpy_h2d_results;

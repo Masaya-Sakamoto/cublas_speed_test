@@ -47,7 +47,7 @@ double getMean(const std::vector<double> results)
     return sum / results.size();
 }
 
-double getStdev(const std::vector<double> results, int ddof=1)
+double getStdev(const std::vector<double> results, int ddof)
 {
     double sqdiff_sum = 0;
     double mean = getMean(results);

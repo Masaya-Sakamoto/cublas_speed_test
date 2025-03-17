@@ -5,6 +5,7 @@
 **/*.o
 **/*.a
 **/*.dylib
+**/build/*
 
 # Python temporary files
 **/__pycache__

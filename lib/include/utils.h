@@ -1,18 +1,19 @@
+#pragma once
 #include <cstdint>
 #include <vector>
 #include <cstdlib>
 
-typedef struct c16_t
+typedef struct
 {
     int16_t r;
     int16_t i;
-};
+} c16_t;
 
-typedef struct cf_t
+typedef struct
 {
     float r;
     float i;
-};
+} cf_t;
 
 int setArray(cf_t *arrayPtr, size_t array_size);
 
