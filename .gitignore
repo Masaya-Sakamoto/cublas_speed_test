@@ -1,0 +1,11 @@
+# C/C++ executables and CUDA executables
+**/*.exe
+**/*.dll
+**/*.so
+**/*.o
+**/*.a
+**/*.dylib
+
+# Python temporary files
+**/__pycache__
+**/*.pyc
