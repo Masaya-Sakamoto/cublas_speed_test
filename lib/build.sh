@@ -4,6 +4,11 @@
 source /opt/AMD/setenv_AOCC.sh
 CXX_FLAGS=" -L/usr/local/lib -lblis-mt -I/usr/local/include/blis"
 
+#clean up
+rm -rf build
+mkdir build
+
+# compile utils
 g++ -Iinclude -c src/utils.cpp -o build/utils.o
 
 # compile CXX files
