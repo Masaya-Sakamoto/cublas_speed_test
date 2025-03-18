@@ -3,7 +3,7 @@ from execution_module import execute_program
 from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import extract_unexecuted_rows, update_status
-from schedule_database_module import initialize_schedule_database, insert_schedule
+from schedule_database_module import initialize_schedule_database, check_schedule, insert_schedule
 
 def validate_parameters(M, N, K):
     if (M * K) % 32 != 0 or (K * N) % 32 != 0 or (M * N) % 32 != 0:
@@ -27,11 +27,7 @@ def main():
     initialize_database(db_path)
     
     initialize_schedule_database(db_path)
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute('SELECT COUNT(*) FROM schedule')
-    schedule_exists = cursor.fetchone()[0] > 0
-    conn.close()
+    schedule_exists = check_schedule(db_path)
 
     if not schedule_exists:
         insert_schedule(db_path, M_min, M_max, N_min, N_max, K_min, K_max)

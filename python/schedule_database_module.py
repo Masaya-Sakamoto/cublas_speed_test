@@ -15,6 +15,14 @@ def initialize_schedule_database(db_path):
     conn.commit()
     conn.close()
 
+def check_schedule(db_path):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM schedule')
+    schedule_exists = cursor.fetchone()[0] > 0
+    conn.close()
+    return schedule_exists
+
 def insert_schedule(db_path, M_min, M_max, N_min, N_max, K_min, K_max):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
