@@ -16,7 +16,9 @@ def initialize_database(db_path):
             device_copy_time_err REAL,
             host_copy_time_avg REAL,
             host_copy_time_err REAL
-        )
+        ),
+        exec_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        status TEXT
     ''')
     conn.commit()
     conn.close()
