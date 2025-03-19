@@ -4,7 +4,7 @@ from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import extract_unexecuted_rows, update_status
 from schedule_database_module import initialize_schedule_database, check_schedule, insert_schedule
-from parameter_database_module import initialize_parameter_database, insert_parameter
+from parameter_database_module import initialize_parameter_database, insert_parameter, initialize_parameters
 
 def validate_parameters(M, N, K):
     if (M * K) % 32 != 0 or (K * N) % 32 != 0 or (M * N) % 32 != 0:
@@ -27,16 +27,13 @@ def main():
     
     initialize_database(db_path)
     initialize_parameter_database(db_path)
-    initialize_schedule_database(db_path)
+    initialize_parameters(db_path, range(M_min, M_max + 1, 32), range(N_min, N_max + 1, 32), range(K_min, K_max + 1, 32))
     
     schedule_exists = check_schedule(db_path)
 
     if not schedule_exists:
-        for M in range(M_min, M_max + 1, 32):
-            for N in range(N_min, N_max + 1, 32):
-                for K in range(K_min, K_max + 1, 32):
-                    parameter_id = insert_parameter(db_path, M, N, K)
-                    insert_schedule(db_path, parameter_id)
+        for parameter_id in range(1, len(range(M_min, M_max + 1, 32)) * len(range(N_min, N_max + 1, 32)) * len(range(K_min, K_max + 1, 32)) + 1):
+            insert_schedule(db_path, parameter_id)
 
     unexecuted_rows = extract_unexecuted_rows(db_path)
     for row in unexecuted_rows:

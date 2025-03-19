@@ -22,3 +22,13 @@ def insert_parameter(db_path, M, N, K):
     conn.commit()
     conn.close()
     return parameter_id
+
+def initialize_parameters(db_path, m_list, n_list, k_list):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    for M in m_list:
+        for N in n_list:
+            for K in k_list:
+                cursor.execute('INSERT INTO parameters (M, N, K) VALUES (?, ?, ?)', (M, N, K))
+    conn.commit()
+    conn.close()
