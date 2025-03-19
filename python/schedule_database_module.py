@@ -21,12 +21,20 @@ def check_schedule(db_path):
     conn.close()
     return schedule_exists
 
-def insert_schedule(db_path, M_min, M_max, N_min, N_max, K_min, K_max):
+def insert_schedule(db_path, parameter_id):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    for M in range(M_min, M_max + 1, 32):
-        for N in range(N_min, N_max + 1, 32):
-            for K in range(K_min, K_max + 1, 32):
-                cursor.execute('INSERT INTO schedule (M, N, K, status) VALUES (?, ?, ?, ?)', (M, N, K, "unexecuted"))
+    cursor.execute('INSERT INTO schedule (parameter_id, status) VALUES (?, ?)', (parameter_id, "unexecuted"))
     conn.commit()
     conn.close()
+
+def list_unregistered_parameters(db_path):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT id FROM parameters
+        WHERE id NOT IN (SELECT parameter_id FROM schedule)
+    ''')
+    unregistered_parameters = cursor.fetchall()
+    conn.close()
+    return [row[0] for row in unregistered_parameters]

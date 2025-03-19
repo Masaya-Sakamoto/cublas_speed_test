@@ -3,7 +3,7 @@ from execution_module import execute_program
 from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import extract_unexecuted_rows, update_status
-from schedule_database_module import initialize_schedule_database, check_schedule, insert_schedule
+from schedule_database_module import initialize_schedule_database, check_schedule, insert_schedule, list_unregistered_parameters
 from parameter_database_module import initialize_parameter_database, insert_parameter, initialize_parameters
 
 def validate_parameters(M, N, K):
@@ -32,7 +32,8 @@ def main():
     schedule_exists = check_schedule(db_path)
 
     if not schedule_exists:
-        for parameter_id in range(1, len(range(M_min, M_max + 1, 32)) * len(range(N_min, N_max + 1, 32)) * len(range(K_min, K_max + 1, 32)) + 1):
+        unregistered_parameters = list_unregistered_parameters(db_path)
+        for parameter_id in unregistered_parameters:
             insert_schedule(db_path, parameter_id)
 
     unexecuted_rows = extract_unexecuted_rows(db_path)
