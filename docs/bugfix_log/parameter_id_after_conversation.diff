@@ -1,0 +1,54 @@
+diff --git a/python/main_program.py b/python/main_program.py
+index 8abf3f2..a088df0 100644
+--- a/python/main_program.py
++++ b/python/main_program.py
+@@ -3,7 +3,7 @@ from execution_module import execute_program
+ from parsing_module import parse_output
+ from database_module import initialize_database, store_results
+ from execution_plan_management import update_status
+-from schedule_database_module import check_schedule, insert_schedule, list_unregistered_parameters
++from schedule_database_module import check_schedule, insert_schedule, list_unregistered_parameters, get_parameters_by_id
+ from parameter_database_module import initialize_parameter_database, insert_parameter, initialize_parameters
+ 
+ def validate_parameters(M, N, K):
+@@ -41,7 +41,8 @@ def main():
+         exec_id, parameter_id = row
+         try:
+             update_status(db_path, exec_id, "in_progress")
+-            output = execute_program(program_path, parameter_id, iterations)
++            param_dict = get_parameters_by_id(db_path, parameter_id)
++            output = execute_program(program_path, param_dict["M"], param_dict["N"], param_dict["K"], iterations)
+             results = parse_output(output)
+             store_results(db_path, parameter_id, iterations, results)
+             update_status(db_path, exec_id, "completed")
+diff --git a/python/schedule_database_module.py b/python/schedule_database_module.py
+index 2b0102c..99f249c 100644
+--- a/python/schedule_database_module.py
++++ b/python/schedule_database_module.py
+@@ -38,3 +38,25 @@ def list_unregistered_parameters(db_path):
+     unregistered_parameters = cursor.fetchall()
+     conn.close()
+     return [row[0] for row in unregistered_parameters]
++
++def get_parameters_by_id(db_path, parameter_id):
++    try:
++        conn = sqlite3.connect(db_path)
++        cursor = conn.cursor()
++        
++        cursor.execute('SELECT M, N, K FROM parameters WHERE id = ?', (parameter_id,))
++        result = cursor.fetchone()
++        
++        if result:
++            M, N, K = result
++            return {'M': M, 'N': N, 'K': K}
++        else:
++            return None  # ID not found in database
++        
++    except sqlite3.Error as e:
++        print(f"An error occurred: {e}")
++        return None
++    
++    finally:
++        if conn:
++            conn.close()
+\ No newline at end of file

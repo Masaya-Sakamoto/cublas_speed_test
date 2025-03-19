@@ -34,7 +34,7 @@ def main():
     if not unexecuted_rows:
         unregistered_parameters = list_unregistered_parameters(db_path)
         for parameter_id in unregistered_parameters:
-            insert_schedule(db_path, parameter_id)
+            insert_schedule(db_path, parameter_id, priority=0)
         unexecuted_rows = check_schedule(db_path)
 
     for row in unexecuted_rows:

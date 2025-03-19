@@ -7,7 +7,8 @@ def initialize_schedule_database(db_path):
         CREATE TABLE IF NOT EXISTS schedule (
             exec_id INTEGER PRIMARY KEY AUTOINCREMENT,
             parameter_id INTEGER,
-            status TEXT
+            status TEXT,
+            priority INTEGER DEFAULT 0
         )
     ''')
     conn.commit()
@@ -16,15 +17,15 @@ def initialize_schedule_database(db_path):
 def check_schedule(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute('SELECT exec_id, parameter_id FROM schedule WHERE status = "unexecuted"')
+    cursor.execute('SELECT exec_id, parameter_id FROM schedule WHERE status = "unexecuted" ORDER BY priority DESC')
     rows = cursor.fetchall()
     conn.close()
     return rows
 
-def insert_schedule(db_path, parameter_id):
+def insert_schedule(db_path, parameter_id, priority=0):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO schedule (parameter_id, status) VALUES (?, ?)', (parameter_id, "unexecuted"))
+    cursor.execute('INSERT INTO schedule (parameter_id, status, priority) VALUES (?, ?, ?)', (parameter_id, "unexecuted", priority))
     conn.commit()
     conn.close()
 
