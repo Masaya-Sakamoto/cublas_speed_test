@@ -3,7 +3,7 @@ from execution_module import execute_program
 from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import update_status
-from schedule_database_module import check_schedule, insert_schedule, list_unregistered_parameters
+from schedule_database_module import check_schedule, insert_schedule, list_unregistered_parameters, get_parameters_by_id
 from parameter_database_module import initialize_parameter_database, insert_parameter, initialize_parameters
 
 def validate_parameters(M, N, K):
@@ -41,7 +41,8 @@ def main():
         exec_id, parameter_id = row
         try:
             update_status(db_path, exec_id, "in_progress")
-            output = execute_program(program_path, parameter_id, iterations)
+            param_dict = get_parameters_by_id(db_path, parameter_id)
+            output = execute_program(program_path, param_dict["M"], param_dict["N"], param_dict["K"], iterations)
             results = parse_output(output)
             store_results(db_path, parameter_id, iterations, results)
             update_status(db_path, exec_id, "completed")

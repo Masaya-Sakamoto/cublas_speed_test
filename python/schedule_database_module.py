@@ -38,3 +38,25 @@ def list_unregistered_parameters(db_path):
     unregistered_parameters = cursor.fetchall()
     conn.close()
     return [row[0] for row in unregistered_parameters]
+
+def get_parameters_by_id(db_path, parameter_id):
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT M, N, K FROM parameters WHERE id = ?', (parameter_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            M, N, K = result
+            return {'M': M, 'N': N, 'K': K}
+        else:
+            return None  # ID not found in database
+        
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return None
+    
+    finally:
+        if conn:
+            conn.close()
