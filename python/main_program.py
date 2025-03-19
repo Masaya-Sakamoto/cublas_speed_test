@@ -4,6 +4,7 @@ from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import extract_unexecuted_rows, update_status
 from schedule_database_module import initialize_schedule_database, check_schedule, insert_schedule
+from parameter_database_module import initialize_parameter_database, insert_parameter
 
 def validate_parameters(M, N, K):
     if (M * K) % 32 != 0 or (K * N) % 32 != 0 or (M * N) % 32 != 0:
@@ -25,28 +26,32 @@ def main():
     iterations = int(sys.argv[9])
     
     initialize_database(db_path)
-    
+    initialize_parameter_database(db_path)
     initialize_schedule_database(db_path)
+    
     schedule_exists = check_schedule(db_path)
 
     if not schedule_exists:
-        insert_schedule(db_path, M_min, M_max, N_min, N_max, K_min, K_max)
+        for M in range(M_min, M_max + 1, 32):
+            for N in range(N_min, N_max + 1, 32):
+                for K in range(K_min, K_max + 1, 32):
+                    parameter_id = insert_parameter(db_path, M, N, K)
+                    insert_schedule(db_path, parameter_id)
 
     unexecuted_rows = extract_unexecuted_rows(db_path)
     for row in unexecuted_rows:
-        exec_id, M, N, K = row
+        exec_id, parameter_id = row
         try:
-            validate_parameters(M, N, K)
             update_status(db_path, exec_id, "in_progress")
-            output = execute_program(program_path, M, N, K, iterations)
+            output = execute_program(program_path, parameter_id, iterations)
             results = parse_output(output)
-            store_results(db_path, M, N, K, iterations, results)
+            store_results(db_path, parameter_id, iterations, results)
             update_status(db_path, exec_id, "completed")
         except ValueError as e:
-            print(f"Skipping invalid parameters M={M}, N={N}, K={K}: {e}")
+            print(f"Skipping invalid parameters parameter_id={parameter_id}: {e}")
             update_status(db_path, exec_id, "unexecuted")
         except Exception as e:
-            print(f"Error processing M={M}, N={N}, K={K}: {e}")
+            print(f"Error processing parameter_id={parameter_id}: {e}")
             update_status(db_path, exec_id, "unexecuted")
 
 if __name__ == "__main__":

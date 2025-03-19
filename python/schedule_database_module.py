@@ -6,9 +6,7 @@ def initialize_schedule_database(db_path):
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS schedule (
             exec_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            M INTEGER,
-            N INTEGER,
-            K INTEGER,
+            parameter_id INTEGER,
             status TEXT
         )
     ''')
