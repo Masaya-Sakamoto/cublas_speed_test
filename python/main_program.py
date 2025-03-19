@@ -11,7 +11,7 @@ def validate_parameters(M, N, K):
         raise ValueError("M*K, K*N, and M*N must all be multiples of 32")
 
 def main():
-    if len(sys.argv) != 8:
+    if len(sys.argv) != 10:
         print("Usage: python main_program.py <db_path> <program_path> <M_min> <M_max> <N_min> <N_max> <K_min> <K_max> <iterations>")
         sys.exit(1)
     

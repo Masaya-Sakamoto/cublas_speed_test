@@ -3,7 +3,7 @@ import sqlite3
 def extract_unexecuted_rows(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute('SELECT exec_id, M, N, K FROM results WHERE status = "unexecuted"')
+    cursor.execute('SELECT exec_id, parameter_id FROM schedule WHERE status = "unexecuted"')
     rows = cursor.fetchall()
     conn.close()
     return rows
