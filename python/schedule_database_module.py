@@ -16,10 +16,10 @@ def initialize_schedule_database(db_path):
 def check_schedule(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute('SELECT COUNT(*) FROM schedule')
-    schedule_exists = cursor.fetchone()[0] > 0
+    cursor.execute('SELECT exec_id, parameter_id FROM schedule WHERE status = "unexecuted"')
+    rows = cursor.fetchall()
     conn.close()
-    return schedule_exists
+    return rows
 
 def insert_schedule(db_path, parameter_id):
     conn = sqlite3.connect(db_path)
