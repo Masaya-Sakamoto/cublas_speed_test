@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <random>
+#include <iostream>
 
 int setArray(cf_t *arrayPtr, size_t array_size)
 {
@@ -56,4 +57,43 @@ double getStdev(const std::vector<double> results, int ddof)
         sqdiff_sum += (result - mean) * (result - mean);
     }
     return sqrt(sqdiff_sum / (results.size() - ddof));
+}
+
+void printSimpleResults(
+    const std::vector<double> calc_duration_times,
+    const std::vector<double> memcpyh2d_duration_times,
+    const std::vector<double> memcpyd2h_duration_times)
+{
+    // Firstly, check if all three inputs have the same size
+    if (calc_duration_times.size() != memcpyh2d_duration_times.size() ||
+        calc_duration_times.size() != memcpyd2h_duration_times.size())
+    {
+        throw std::invalid_argument("All input vectors must have the same size.");
+    }
+    // 
+    for (int i = 0; i < calc_duration_times.size(); i++)
+    {
+        std::cout << calc_duration_times[i] << ",";
+        std::cout << memcpyh2d_duration_times[i] << ",";
+        std::cout << memcpyd2h_duration_times[i] << std::endl;
+    }
+    return;
+}
+
+void printResultsSummary(
+    const std::vector<double> calc_duration_times,
+    const std::vector<double> memcpyh2d_duration_times,
+    const std::vector<double> memcpyd2h_duration_times)
+{
+    // Firstly, check if all three inputs have the same size
+    if (calc_duration_times.size() != memcpyh2d_duration_times.size() ||
+        calc_duration_times.size() != memcpyd2h_duration_times.size())
+    {
+        throw std::invalid_argument("All input vectors must have the same size.");
+    }
+    // 
+    std::cout << getMean(calc_duration_times) << "," << getStdev(calc_duration_times);
+    std::cout << getMean(memcpyh2d_duration_times) << "," << getStdev(memcpyh2d_duration_times);
+    std::cout << getMean(memcpyd2h_duration_times) << "," << getStdev(memcpyd2h_duration_times);
+    std::cout << std::endl;
 }

@@ -24,3 +24,13 @@ int setArrays(cf_t *A, cf_t *B, cf_t *C, cf_t *alpha, cf_t *beta, const int M, c
 double getMean(const std::vector<double> results);
 
 double getStdev(const std::vector<double> results, int ddof=1);
+
+void printSimpleResults(
+    const std::vector<double> calc_duration_times,
+    const std::vector<double> memcpyh2d_duration_times,
+    const std::vector<double> memcpyd2h_duration_times);
+
+    void printResultsSummary(
+        const std::vector<double> calc_duration_times,
+        const std::vector<double> memcpyh2d_duration_times,
+        const std::vector<double> memcpyd2h_duration_times);

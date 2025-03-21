@@ -160,10 +160,7 @@ int main(int argc, char *argv[])
         cudaEventElapsedTime(&milliseconds, start, stop);
         ms_results.push_back(milliseconds);
     }
-    std::cout << getMean(ms_results) << "," << getStdev(ms_results);
-    std::cout << getMean(memcpy_h2d_results) << "," << getStdev(memcpy_h2d_results);
-    std::cout << getMean(memcpy_d2h_results) << "," << getStdev(memcpy_d2h_results);
-    std::cout << std::endl;
+    printSimpleResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
 
     cudaFree(d_A);
     cudaFree(d_B);

@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 
     // initialize results
     std::vector<double> ms_results;
+    std::vector<double> memcpy_h2d_results(iters, 0.0);
+    std::vector<double> memcpy_d2h_results(iters, 0.0);
 
     for (int i = 0; i < iters; i++)
     {
@@ -36,10 +38,7 @@ int main(int argc, char *argv[])
         ms_results.push_back(
             static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(cpu_duration).count()));
     }
-    std::cout << getMean(ms_results) << "," << getStdev(ms_results);
-    std::cout << 0 << "," << 0;
-    std::cout << 0 << "," << 0;
-    std::cout << std::endl;
+    printSimpleResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
 
     free(A);
     free(B);
