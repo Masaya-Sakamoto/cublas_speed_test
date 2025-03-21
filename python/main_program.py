@@ -4,6 +4,7 @@ from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import update_status
 from schedule_database_module import check_schedule, insert_schedule, register_parameters_to_schedule, get_parameters_by_id
+from raw_data_module import insert_raw_data, extract_raw_data
 from parameter_database_module import initialize_parameter_database, initialize_parameters
 
 def validate_parameters(M, N, K):
@@ -41,7 +42,21 @@ def main():
             update_status(db_path, exec_id, "in_progress")
             param_dict = get_parameters_by_id(db_path, parameter_id)
             output = execute_program(program_path, param_dict["M"], param_dict["N"], param_dict["K"], iterations)
-            results = parse_output(output)
+            for line in output.strip().split('\n'):
+                execution_time, host_to_device_time, device_to_host_time = map(float, line.split(','))
+                insert_raw_data(db_path, parameter_id, execution_time, host_to_device_time, device_to_host_time)
+            raw_data = extract_raw_data(db_path, parameter_id)
+            execution_times = [row[0] for row in raw_data]
+            host_to_device_times = [row[1] for row in raw_data]
+            device_to_host_times = [row[2] for row in raw_data]
+            results = {
+                'execution_time_avg': sum(execution_times) / len(execution_times),
+                'execution_time_err': (sum((x - sum(execution_times) / len(execution_times)) ** 2 for x in execution_times) / (len(execution_times) - 1)) ** 0.5,
+                'device_copy_time_avg': sum(host_to_device_times) / len(host_to_device_times),
+                'device_copy_time_err': (sum((x - sum(host_to_device_times) / len(host_to_device_times)) ** 2 for x in host_to_device_times) / (len(host_to_device_times) - 1)) ** 0.5,
+                'host_copy_time_avg': sum(device_to_host_times) / len(device_to_host_times),
+                'host_copy_time_err': (sum((x - sum(device_to_host_times) / len(device_to_host_times)) ** 2 for x in device_to_host_times) / (len(device_to_host_times) - 1)) ** 0.5
+            }
             store_results(db_path, parameter_id, iterations, results)
             update_status(db_path, exec_id, "completed")
         except ValueError as e:

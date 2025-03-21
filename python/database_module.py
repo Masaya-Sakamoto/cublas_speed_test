@@ -14,9 +14,15 @@ def initialize_database(db_path):
             device_copy_time_err REAL,
             host_copy_time_avg REAL,
             host_copy_time_err REAL
-        ),
-        exec_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        status TEXT
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS raw_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            parameter_id INTEGER,
+            execution_time REAL,
+            host_to_device_time REAL,
+            device_to_host_time REAL
     ''')
     conn.commit()
     conn.close()
