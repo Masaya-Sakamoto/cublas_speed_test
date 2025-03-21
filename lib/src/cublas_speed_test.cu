@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
         cudaEventElapsedTime(&milliseconds, start, stop);
         ms_results.push_back(milliseconds);
     }
-    printSimpleResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
+    printResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
 
     cudaFree(d_A);
     cudaFree(d_B);

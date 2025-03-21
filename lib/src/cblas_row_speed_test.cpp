@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         ms_results.push_back(
             static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(cpu_duration).count()));
     }
-    printSimpleResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
+    printResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
 
     free(A);
     free(B);

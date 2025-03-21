@@ -97,3 +97,33 @@ void printResultsSummary(
     std::cout << getMean(memcpyd2h_duration_times) << "," << getStdev(memcpyd2h_duration_times);
     std::cout << std::endl;
 }
+
+void printResults(
+    const std::vector<double> calc_duration_times,
+    const std::vector<double> memcpyh2d_duration_times,
+    const std::vector<double> memcpyd2h_duration_times)
+    {
+        switch (print_option)
+        {
+        case PRINT_NONE:
+            // 
+            break;
+        case PRINT_ALL:
+            printSimpleResults(
+                calc_duration_times,
+                memcpyh2d_duration_times,
+                memcpyd2h_duration_times
+            );
+            break;
+        case PRINT_MEAN_STDEV:
+            printResultsSummary(
+                calc_duration_times,
+                memcpyh2d_duration_times,
+                memcpyd2h_duration_times
+            );
+            break;
+        
+        default:
+            break;
+        }
+    }
