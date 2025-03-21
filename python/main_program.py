@@ -1,4 +1,5 @@
 import sys
+import yaml
 from execution_module import execute_program
 from database_module import initialize_database, store_results, aggregate_results
 from execution_plan_management import update_status
@@ -10,20 +11,25 @@ def validate_parameters(M, N, K):
     if (M * K) % 32 != 0 or (K * N) % 32 != 0 or (M * N) % 32 != 0:
         raise ValueError("M*K, K*N, and M*N must all be multiples of 32")
 
-def main():
-    if len(sys.argv) != 10:
-        print("Usage: python main_program.py <db_path> <program_path> <M_min> <M_max> <N_min> <N_max> <K_min> <K_max> <iterations>")
+def main(program_name, iterations):
+    with open('run_config.yml', 'r') as file:
+        config = yaml.safe_load(file)
+
+    program_config = None
+    for program in config['programs'].values():
+        if program['name'] == program_name:
+            program_config = program
+            break
+
+    if not program_config:
+        print(f"Program {program_name} not found in configuration.")
         sys.exit(1)
     
-    db_path = sys.argv[1]
-    program_path = sys.argv[2]
-    M_min = int(sys.argv[3])
-    M_max = int(sys.argv[4])
-    N_min = int(sys.argv[5])
-    N_max = int(sys.argv[6])
-    K_min = int(sys.argv[7])
-    K_max = int(sys.argv[8])
-    iterations = int(sys.argv[9])
+    db_path = program_config['db_path']
+    program_path = program_config['path']
+    M_min, M_max = program_config.get('M_limit', config['defaults']['M_limit'])
+    N_min, N_max = program_config.get('N_limit', config['defaults']['N_limit'])
+    K_min, K_max = program_config.get('K_limit', config['defaults']['K_limit'])
     
     initialize_database(db_path)
     initialize_parameter_database(db_path)
