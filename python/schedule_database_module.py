@@ -33,12 +33,12 @@ def list_unregistered_parameters(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT id FROM parameters
+        SELECT id, M, N, K FROM parameters
         WHERE id NOT IN (SELECT parameter_id FROM schedule)
     ''')
     unregistered_parameters = cursor.fetchall()
     conn.close()
-    return [row[0] for row in unregistered_parameters]
+    return unregistered_parameters
 
 def get_parameters_by_id(db_path, parameter_id):
     try:
@@ -61,3 +61,10 @@ def get_parameters_by_id(db_path, parameter_id):
     finally:
         if conn:
             conn.close()
+
+def register_parameters_to_schedule(db_path):
+    unregistered_parameters = list_unregistered_parameters(db_path)
+    sorted_parameters = sorted(unregistered_parameters, key=lambda x: x[1] * x[2] * x[3])
+    for parameter in sorted_parameters:
+        parameter_id = parameter[0]
+        insert_schedule(db_path, parameter_id, priority=0)

@@ -3,8 +3,8 @@ from execution_module import execute_program
 from parsing_module import parse_output
 from database_module import initialize_database, store_results
 from execution_plan_management import update_status
-from schedule_database_module import check_schedule, insert_schedule, list_unregistered_parameters, get_parameters_by_id
-from parameter_database_module import initialize_parameter_database, insert_parameter, initialize_parameters
+from schedule_database_module import check_schedule, insert_schedule, register_parameters_to_schedule, get_parameters_by_id
+from parameter_database_module import initialize_parameter_database, initialize_parameters
 
 def validate_parameters(M, N, K):
     if (M * K) % 32 != 0 or (K * N) % 32 != 0 or (M * N) % 32 != 0:
@@ -32,9 +32,7 @@ def main():
     unexecuted_rows = check_schedule(db_path)
 
     if not unexecuted_rows:
-        unregistered_parameters = list_unregistered_parameters(db_path)
-        for parameter_id in unregistered_parameters:
-            insert_schedule(db_path, parameter_id, priority=0)
+        register_parameters_to_schedule(db_path)
         unexecuted_rows = check_schedule(db_path)
 
     for row in unexecuted_rows:
