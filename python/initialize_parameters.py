@@ -1,7 +1,7 @@
 import yaml
 from parameter_database_module import initialize_parameter_database, initialize_parameters
 
-def main():
+def initialize_from_config():
     with open('run_config.yml', 'r') as file:
         config = yaml.safe_load(file)
 
@@ -15,4 +15,4 @@ def main():
         initialize_parameters(db_path, m_list, n_list, k_list)
 
 if __name__ == "__main__":
-    main()
+    initialize_from_config()

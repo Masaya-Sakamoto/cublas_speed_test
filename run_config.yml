@@ -15,6 +15,9 @@ programs:
     name: "cblas_row_speed_test"
     path: "lib/build/cblas_row_speed_test"
     db_path: "results/cblas_row_speed_test.db"
+    M_limit: [1, 4096]
+    N_limit: [120, 12880]
+    K_limit: [1, 4096]
     init:
       init_m_list: [1, 2, 4, 8, 16, 128, 256, 512, 4096]
       init_n_list: [120, 240, 480, 960, 1920, 3840, 7680, 15360, 30720, 61440, 12880]
@@ -24,6 +27,9 @@ programs:
     name: "cublas_speed_test"
     path: "lib/build/cublas_speed_test"
     db_path: "results/cublas_speed_test.db"
+    M_limit: [1, 4096]
+    N_limit: [120, 12880]
+    K_limit: [1, 4096]
     init:
       init_m_list: [1, 2, 4, 8, 16, 128, 256, 512, 4096]
       init_n_list: [120, 240, 480, 960, 1920, 3840, 7680, 15360, 30720, 61440, 12880]

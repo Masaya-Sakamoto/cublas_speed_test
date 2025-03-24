@@ -24,11 +24,49 @@ def insert_parameter(db_path, M, N, K):
     return parameter_id
 
 def initialize_parameters(db_path, m_list, n_list, k_list):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    for M in m_list:
-        for N in n_list:
-            for K in k_list:
-                cursor.execute('INSERT INTO parameters (M, N, K) VALUES (?, ?, ?)', (M, N, K))
-    conn.commit()
-    conn.close()
+    conn = None
+    cursor = None
+    
+    try:
+        # Connect to the database
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Prepare parameters as a list of tuples
+        params = [(M, N, K) for M in m_list for N in n_list for K in k_list]
+        
+        
+        # Insert all parameters efficiently, updating if they exist
+        cursor.executemany('''
+            INSERT INTO parameters (M, N, K)
+            VALUES (?, ?, ?)
+            ON CONFLICT(M, N, K) DO UPDATE SET
+            M = excluded.M,
+            N = excluded.N,
+            K = excluded.K
+        ''', params)
+        
+        # Commit the transaction
+        conn.commit()
+        
+    except sqlite3.Error as e:
+        print(f"An error occurred while connecting to SQLite: {e}")
+        if conn is not None:
+            # Roll back any changes if something went wrong
+            conn.rollback()
+        raise
+        
+    except Exception as e:
+        print(f"An error occurred while executing SQL statement: {e}")
+        print(f"Last attempted parameters: {params[-1] if params else 'No parameters'}")
+        if conn is not None:
+            # Roll back any changes if something went wrong
+            conn.rollback()
+        raise
+        
+    finally:
+        # Close cursor and connection regardless of success or failure
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()

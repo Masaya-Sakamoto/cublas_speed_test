@@ -1,0 +1,22 @@
+programs:
+  program1:
+    name: "cblas_col_speed_test"
+    M_critical: [1, 2, 4, 8, 4096]
+    N_critical: [120, 240, 3840, 7680, 15360, 30720, 61440, 12880]
+    K_critical: [1,2,4,8,16,32, 64, 128, 256, 4096]
+  program2:
+    name: "cblas_row_speed_test"
+    M_critical: [1, 2, 4, 8, 4096]
+    N_critical: [120, 240, 3840, 7680, 15360, 30720, 61440, 12880]
+    K_critical: [1,2,4,8,16,32, 64, 128, 256, 4096]
+  program3:
+    name: "cublas_speed_test"
+    M_critical: [1, 2, 4, 8, 4096]
+    N_critical: [120, 240, 3840, 7680, 15360, 30720, 61440, 12880]
+    K_critical: [1,2,4,8,16,32, 64, 128, 256, 4096]
+
+# 何も指定されなかった場合
+global:
+  M_critical: [1, 2, 4, 8, 4096]
+  N_critical: [120, 240, 3840, 7680, 15360, 30720, 61440, 12880]
+  K_critical: [1,2,4,8,16,32, 64, 128, 256, 4096]

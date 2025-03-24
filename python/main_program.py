@@ -3,7 +3,8 @@ import yaml
 from execution_module import execute_program
 from database_module import initialize_database, store_results, aggregate_results
 from execution_plan_management import update_status
-from schedule_database_module import check_schedule, register_parameters_to_schedule, get_parameters_by_id
+from schedule_database_module import check_schedule, register_parameters_to_schedule, get_parameters_by_id, initialize_schedule_database
+from initialize_parameters import initialize_from_config
 from raw_data_module import parse_and_insert_raw_data
 from parameter_database_module import initialize_parameter_database, initialize_parameters
 
@@ -27,13 +28,13 @@ def main(program_name, iterations):
     
     db_path = program_config['db_path']
     program_path = program_config['path']
-    M_min, M_max = program_config.get('M_limit', config['defaults']['M_limit'])
-    N_min, N_max = program_config.get('N_limit', config['defaults']['N_limit'])
-    K_min, K_max = program_config.get('K_limit', config['defaults']['K_limit'])
+    # M_min, M_max = program_config.get('M_limit', config['defaults']['M_limit'])
+    # N_min, N_max = program_config.get('N_limit', config['defaults']['N_limit'])
+    # K_min, K_max = program_config.get('K_limit', config['defaults']['K_limit'])
     
+    initialize_from_config(db_path)
     initialize_database(db_path)
-    initialize_parameter_database(db_path)
-    initialize_parameters(db_path, range(M_min, M_max + 1, 32), range(N_min, N_max + 1, 32), range(K_min, K_max + 1, 32))
+    initialize_schedule_database(db_path)
     
     unexecuted_rows = check_schedule(db_path)
 

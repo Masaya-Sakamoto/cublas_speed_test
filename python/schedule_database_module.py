@@ -29,6 +29,13 @@ def insert_schedule(db_path, parameter_id, priority=0):
     conn.commit()
     conn.close()
 
+def insert_schedules(db_path, parameter_id_list, priority_list):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    insert_list = [(parameter_id, "unexecuted", priority) for parameter_id in parameter_id_list for priority in priority_list]
+    cursor.executemany('INSERT INTO parameters (M, N, K) VALUES (?, ?, ?)', insert_list)
+    conn.close()
+
 def list_unregistered_parameters(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -64,7 +71,16 @@ def get_parameters_by_id(db_path, parameter_id):
 
 def register_parameters_to_schedule(db_path):
     unregistered_parameters = list_unregistered_parameters(db_path)
-    sorted_parameters = sorted(unregistered_parameters, key=lambda x: x[1] * x[2] * x[3])
-    for parameter in sorted_parameters:
-        parameter_id = parameter[0]
-        insert_schedule(db_path, parameter_id, priority=0)
+    if len(unregistered_parameters) == 0:
+        return 0
+    try:
+        sorted_parameters = sorted(unregistered_parameters, key=lambda x: x[1] * x[2] * x[3])
+        insert_schedules(
+            db_path,
+            (parameter[0] for parameter in sorted_parameters),
+            (0 for _ in range(len(sorted_parameters))))
+    except Exception as e:
+        print(f"Error inserting schedules into database: {e}")
+        return 1
+    return 0
+    
