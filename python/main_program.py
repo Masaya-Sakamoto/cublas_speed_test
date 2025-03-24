@@ -28,9 +28,6 @@ def main(program_name, iterations):
     
     db_path = program_config['db_path']
     program_path = program_config['path']
-    # M_min, M_max = program_config.get('M_limit', config['defaults']['M_limit'])
-    # N_min, N_max = program_config.get('N_limit', config['defaults']['N_limit'])
-    # K_min, K_max = program_config.get('K_limit', config['defaults']['K_limit'])
     
     initialize_from_config(db_path)
     initialize_database(db_path)

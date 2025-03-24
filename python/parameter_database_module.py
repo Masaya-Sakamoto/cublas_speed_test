@@ -1,5 +1,23 @@
 import sqlite3
 
+def initialize_settings(db_path, program_settings):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value INTEGER
+        )
+    ''')
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["M_limit"][0]))
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["M_limit"][1]))
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["N_limit"][0]))
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["N_limit"][1]))
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["K_limit"][0]))
+    cursor.execute("INSERT INTO settings (key, value) VALUES (?, ?);", ("M_MINIMUM", program_settings["K_limit"][1]))
+    conn.commit()
+    conn.close()
+
 def initialize_parameter_database(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()

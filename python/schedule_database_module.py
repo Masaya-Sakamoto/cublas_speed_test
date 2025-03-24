@@ -1,4 +1,14 @@
 import sqlite3
+import yaml
+
+def read_critical_params(program_name):
+    with open('critical_params.yml', 'r') as file:
+        params = yaml.safe_load(file)
+        priority = params.get('priority')
+    return priority
+
+def update_priority():
+    new_priority = read_critical_params()
 
 def initialize_schedule_database(db_path):
     conn = sqlite3.connect(db_path)

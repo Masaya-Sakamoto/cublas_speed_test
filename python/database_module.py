@@ -15,7 +15,8 @@ def initialize_database(db_path):
             device_copy_time_avg REAL,
             device_copy_time_err REAL,
             host_copy_time_avg REAL,
-            host_copy_time_err REAL
+            host_copy_time_err REAL,
+            UNIQUE(parameter_id)
         )
     ''')
     cursor.execute('''
@@ -24,7 +25,8 @@ def initialize_database(db_path):
             parameter_id INTEGER,
             execution_time REAL,
             host_to_device_time REAL,
-            device_to_host_time REAL
+            device_to_host_time REAL,
+            UNIQUE(parameter_id)
     ''')
     conn.commit()
     conn.close()
