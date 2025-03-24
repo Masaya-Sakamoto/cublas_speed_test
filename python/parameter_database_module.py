@@ -8,7 +8,8 @@ def initialize_parameter_database(db_path):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             M INTEGER,
             N INTEGER,
-            K INTEGER
+            K INTEGER,
+            UNIQUE(M, N, K)
         )
     ''')
     conn.commit()
