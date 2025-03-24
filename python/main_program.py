@@ -1,5 +1,6 @@
 import sys
 import yaml
+import logging
 from execution_module import execute_program
 from database_module import initialize_database, store_results, aggregate_results
 from execution_plan_management import update_status
@@ -60,25 +61,39 @@ if __name__ == "__main__":
     try:
         with open('run_config.yml', 'r') as file:
             config = yaml.safe_load(file)
+    except FileNotFoundError:
+        logging.error("Configuration file 'run_config.yml' not found.")
+        exit(1)
+    except yaml.YAMLError as e:
+        logging.error(f"Error parsing YAML file: {e}")
+        exit(1)
+    except Exception as e:
+        logging.error(f"Unexpected error while reading config file: {e}")
+        exit(1)
 
-        # read global params
-        try:
-            global_configs = config['global'].values()
-        except:
-            # TODO: ERROR HANDLING
-            pass
+    # Read global parameters
+    try:
+        global_configs = config.get('global', {})
+        global_iterations = global_configs.get('iterations', 1)  # Default to 1 if not specified
+    except Exception as e:
+        logging.error(f"Error retrieving global configurations: {e}")
+        exit(1)
+
+    # Read and process programs
+    try:
+        programs = config.get('programs', {})
+        if not programs:
+            logging.warning("No programs found in configuration.")
         
-        try:
-            for program in config['programs'].values():
-                program_config = program
-                try: # if there is iterations
-                    main(program_name=program_config['name'], iterations=program_config['iterations'])
-                except:
-                    main(program_name=program_config['name'], iterations=global_configs['iterations'])
-        except:
-            # TODO: ERROR HANDLING
-            pass
-    except:
-        # TODO: ERROR HANDLING
-        pass
+        for program in programs.values():
+            try:
+                program_name = program.get('name', 'UnnamedProgram')
+                iterations = program.get('iterations', global_iterations)
+                main(program_name=program_name, iterations=iterations)
+            except Exception as e:
+                logging.error(f"Error processing program '{program_name}': {e}")
+    except Exception as e:
+        logging.error(f"Error reading 'programs' section: {e}")
+        exit(1)
+
     print("Done")
