@@ -19,6 +19,7 @@ def initialize_database(db_path):
             UNIQUE(parameter_id)
         )
     ''')
+    conn.commit()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS raw_data (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +28,7 @@ def initialize_database(db_path):
             host_to_device_time REAL,
             device_to_host_time REAL,
             UNIQUE(parameter_id)
+        )
     ''')
     conn.commit()
     conn.close()

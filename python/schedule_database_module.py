@@ -43,7 +43,7 @@ def insert_schedules(db_path, parameter_id_list, priority_list):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     insert_list = [(parameter_id, "unexecuted", priority) for parameter_id in parameter_id_list for priority in priority_list]
-    cursor.executemany('INSERT INTO parameters (M, N, K) VALUES (?, ?, ?)', insert_list)
+    cursor.executemany('INSERT INTO schedule (parameter_id, status, priority) VALUES (?, ?, ?)', insert_list)
     conn.close()
 
 def list_unregistered_parameters(db_path):
