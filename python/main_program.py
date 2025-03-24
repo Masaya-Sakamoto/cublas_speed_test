@@ -57,4 +57,28 @@ def main(program_name, iterations):
             update_status(db_path, exec_id, "unexecuted")
 
 if __name__ == "__main__":
-    main()
+    try:
+        with open('run_config.yml', 'r') as file:
+            config = yaml.safe_load(file)
+
+        # read global params
+        try:
+            global_configs = config['global'].values()
+        except:
+            # TODO: ERROR HANDLING
+            pass
+        
+        try:
+            for program in config['programs'].values():
+                program_config = program
+                try: # if there is iterations
+                    main(program_name=program_config['name'], iterations=program_config['iterations'])
+                except:
+                    main(program_name=program_config['name'], iterations=global_configs['iterations'])
+        except:
+            # TODO: ERROR HANDLING
+            pass
+    except:
+        # TODO: ERROR HANDLING
+        pass
+    print("Done")
