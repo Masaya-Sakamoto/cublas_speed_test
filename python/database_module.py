@@ -26,8 +26,7 @@ def initialize_database(db_path):
             parameter_id INTEGER,
             execution_time REAL,
             host_to_device_time REAL,
-            device_to_host_time REAL,
-            UNIQUE(parameter_id)
+            device_to_host_time REAL
         )
     ''')
     conn.commit()
@@ -40,7 +39,7 @@ def store_results(db_path, parameter_id, results):
         INSERT INTO results (
             parameter_id, iterations, execution_time_avg, execution_time_err,
             device_copy_time_avg, device_copy_time_err, host_copy_time_avg, host_copy_time_err
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(parameter_id) DO UPDATE SET
             iterations=excluded.iterations,
             execution_time_avg=excluded.execution_time_avg,
