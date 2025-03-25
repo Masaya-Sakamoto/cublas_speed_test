@@ -73,7 +73,7 @@ def main(program_name, iterations):
                 if not all(k in param_dict for k in ["M", "N", "K"]):
                     raise ValueError("Missing required parameters M, N, or K")
 
-                print(f"{program_name}, M={param_dict["M"]}, N={param_dict["N"]}, K={param_dict["K"]}, {iterations=}")
+                print(f"{program_name}, M={param_dict['M']}, N={param_dict['N']}, K={param_dict['K']}, {iterations=}")
                 output = execute_program(f"{program_path}", param_dict["M"], param_dict["N"], param_dict["K"], iterations)
                 if output is None:
                     raise RuntimeError(f"Execution failed for parameter_id={parameter_id}")
