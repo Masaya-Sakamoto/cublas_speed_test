@@ -42,8 +42,10 @@ def insert_schedule(db_path, parameter_id, priority=0):
 def insert_schedules(db_path, parameter_id_list, priority_list):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    insert_list = [(parameter_id, "unexecuted", priority) for parameter_id in parameter_id_list for priority in priority_list]
+    #insert_list = [(parameter_id, "unexecuted", priority) for parameter_id in parameter_id_list for priority in priority_list]
+    insert_list = [(parameter_id, "unexecuted", priority) for parameter_id, priority in zip(parameter_id_list, priority_list)]
     cursor.executemany('INSERT INTO schedule (parameter_id, status, priority) VALUES (?, ?, ?)', insert_list)
+    conn.commit()
     conn.close()
 
 def list_unregistered_parameters(db_path):
@@ -87,10 +89,13 @@ def register_parameters_to_schedule(db_path):
         sorted_parameters = sorted(unregistered_parameters, key=lambda x: x[1] * x[2] * x[3])
         insert_schedules(
             db_path,
-            (parameter[0] for parameter in sorted_parameters),
-            (0 for _ in range(len(sorted_parameters))))
+            [parameter[0] for parameter in sorted_parameters],
+            [0 for _ in range(len(sorted_parameters))])
+    except sqlite3.Error as e:
+        print(f"SQLite error occurred: {e}")
+        return 1
     except Exception as e:
-        print(f"Error inserting schedules into database: {e}")
+        print(f"Unexpected error occurred: {e}")
         return 1
     return 0
     

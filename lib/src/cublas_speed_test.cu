@@ -93,15 +93,15 @@ std::pair<int, float> Array2Host(cuComplex *h_A, cuComplex *h_B, cuComplex *h_C,
 
 int main(int argc, char *argv[])
 {
-    if (argc != 4)
+    if (argc != 5)
     {
         std::cerr << "Usage: " << argv[0] << " <rows> <cols>" << std::endl;
         return 1;
     }
-    int N = atoi(argv[0]);
     int M = atoi(argv[1]);
-    int K = atoi(argv[2]);
-    int iters = atoi(argv[3]);
+    int N = atoi(argv[2]);
+    int K = atoi(argv[3]);
+    int iters = atoi(argv[4]);
 
     // initialize host arrays
     cf_t *A = (cf_t *)aligned_alloc(ALIGN, sizeof(cf_t) * M * K);

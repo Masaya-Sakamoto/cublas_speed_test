@@ -1,7 +1,7 @@
 programs:
   program1:
     name: "cblas_col_speed_test"
-    path: "lib/build/cblas_col_speed_test"
+    path: "/home/msakamoto/test/cublas_speed_test/lib/build/cblas_col_speed_test"
     db_path: "results/cblas_col_speed_test.db"
     M_limit: [1, 4096]
     N_limit: [120, 12880]
@@ -14,7 +14,7 @@ programs:
   
   program2:
     name: "cblas_row_speed_test"
-    path: "lib/build/cblas_row_speed_test"
+    path: "/home/msakamoto/test/cublas_speed_test/lib/build/cblas_row_speed_test"
     db_path: "results/cblas_row_speed_test.db"
     M_limit: [1, 4096]
     N_limit: [120, 12880]
@@ -27,7 +27,7 @@ programs:
   
   program3:
     name: "cublas_speed_test"
-    path: "lib/build/cublas_speed_test"
+    path: "/home/msakamoto/test/cublas_speed_test/lib/build/cublas_speed_test"
     db_path: "results/cublas_speed_test.db"
     M_limit: [1, 4096]
     N_limit: [120, 12880]

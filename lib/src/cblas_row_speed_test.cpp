@@ -7,15 +7,15 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 4)
+    if (argc != 5)
     {
         std::cerr << "Usage: " << argv[0] << " <rows> <cols>" << std::endl;
         return 1;
     }
-    int N = atoi(argv[0]);
     int M = atoi(argv[1]);
-    int K = atoi(argv[2]);
-    int iters = atoi(argv[3]);
+    int N = atoi(argv[2]);
+    int K = atoi(argv[3]);
+    int iters = atoi(argv[4]);
 
     // initialize arrays
     cf_t *A = (cf_t *)aligned_alloc(ALIGN, sizeof(cf_t) * M * K);
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
         auto start = std::chrono::high_resolution_clock::now();
         cblas_cgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, M, N, K, &alpha, A, K, B, N, &beta, C, N);
         auto cpu_duration = std::chrono::high_resolution_clock::now() - start;
-        ms_results.push_back(
-            static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(cpu_duration).count()));
+        auto time_count = (double)std::chrono::duration_cast<std::chrono::microseconds>(cpu_duration).count() / 1000;
+        ms_results.push_back(time_count);
     }
     printResults(ms_results, memcpy_h2d_results, memcpy_d2h_results);
 

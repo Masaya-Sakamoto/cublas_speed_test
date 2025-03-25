@@ -2,8 +2,13 @@
 #include <random>
 #include <iostream>
 
+// #define DEBUG
+
 int setArray(cf_t *arrayPtr, size_t array_size)
 {
+    #ifdef DEBUG
+    std::cout << "setArray: " << std::hex << arrayPtr;
+    #endif
     // set noraml distribution random values
     // but the element type is complex float
     std::random_device rd;
@@ -14,6 +19,9 @@ int setArray(cf_t *arrayPtr, size_t array_size)
         arrayPtr[i].r = static_cast<float>(dis(gen)); // fixme
         arrayPtr[i].i = static_cast<float>(dis(gen));
     }
+    #ifdef DEBUG
+    std::cout << "    done" << std::endl;
+    #endif
     return 0;
 }
 
