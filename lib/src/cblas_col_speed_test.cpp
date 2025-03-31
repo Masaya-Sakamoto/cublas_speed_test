@@ -7,15 +7,11 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 5)
-    {
-        std::cerr << "Usage: " << argv[0] << " <rows> <cols>" << std::endl;
-        return 1;
-    }
-    int M = atoi(argv[1]);
-    int N = atoi(argv[2]);
-    int K = atoi(argv[3]);
-    int iters = atoi(argv[4]);
+    auto args = getTestArgs(argc, argv);
+    auto M = args.at("M");
+    auto N = args.at("N");
+    auto K = args.at("K");
+    auto iters = args.at("iters");
 
     // initialize arrays
     cf_t *A = (cf_t *)aligned_alloc(ALIGN, sizeof(cf_t) * M * K);

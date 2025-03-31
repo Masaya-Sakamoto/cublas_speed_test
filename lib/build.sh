@@ -19,7 +19,12 @@ g++ -O3 -Iinclude -c src/cblas_row_speed_test.cpp -o build/modules/cblas_row_spe
 g++ build/modules/cblas_col_speed_test.o build/modules/utils.o -o build/cblas_col_speed_test $CXX_FLAGS
 g++ build/modules/cblas_row_speed_test.o build/modules/utils.o -o build/cblas_row_speed_test $CXX_FLAGS
 
+# compile CUDA utils
+nvcc -O3 -Iinclude -c src/cuda_utils -o build/modules/cuda_utils.o
+
 # compile CUDA file
 nvcc -O3 -Iinclude -c src/cublas_speed_test.cu -o build/modules/cublas_speed_test.o
+
 # link cuda and cxx objects
-nvcc build/modules/cublas_speed_test.o build/modules/utils.o -o build/cublas_speed_test $CXX_FLAGS -lcublas
+nvcc build/modules/cublas_speed_test.o build/modules/utils.o build/modules/cuda_utils.o  -o build/cublas_speed_test $CXX_FLAGS -lcublas
+nvcc build/modules/cublas_speed_test_multistreams.o build/modules/utils.o build/modules/cuda_utils.o -o build/cublas_speed_test_multistreams $CXX_FLAGS -lcublas

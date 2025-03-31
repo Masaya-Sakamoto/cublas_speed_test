@@ -4,6 +4,36 @@
 
 // #define DEBUG
 
+std::map<std::string, int> getTestArgs(int argc, char *argv[])
+{
+    std::map<std::string, int> returnMap;
+    if (argc != 5)
+    {
+        std::cerr << "Usage: " << argv[0] << " <rows> <cols> <depth> <iterations>" << std::endl;
+        throw std::invalid_argument("Incorrect number of arguments provided.");
+    }
+
+    try
+    {
+        returnMap.emplace("M", std::stoi(argv[1]));
+        returnMap.emplace("N", std::stoi(argv[2]));
+        returnMap.emplace("K", std::stoi(argv[3]));
+        returnMap.emplace("iters", std::stoi(argv[4]));
+    }
+    catch (const std::invalid_argument &e)
+    {
+        std::cerr << "Error: All arguments must be integers." << std::endl;
+        throw;
+    }
+    catch (const std::out_of_range &e)
+    {
+        std::cerr << "Error: Argument value out of range." << std::endl;
+        throw;
+    }
+
+    return returnMap;
+}
+
 int setArray(cf_t *arrayPtr, size_t array_size)
 {
     #ifdef DEBUG

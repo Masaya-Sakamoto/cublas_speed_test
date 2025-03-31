@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <vector>
 #include <cstdlib>
+#include <map>
+#include <string>
 
 enum PRINT_OPTIONS
 {
@@ -23,6 +25,8 @@ typedef struct
     float r;
     float i;
 } cf_t;
+
+std::map<std::string, int> getTestArgs(int argc, char *argv[]);
 
 int setArray(cf_t *arrayPtr, size_t array_size);
 
