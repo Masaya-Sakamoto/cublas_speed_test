@@ -7,7 +7,7 @@
 std::map<std::string, int> getTestArgs(int argc, char *argv[])
 {
     std::map<std::string, int> returnMap;
-    if (argc != 5)
+    if (argc != 5 || argc != 6)
     {
         std::cerr << "Usage: " << argv[0] << " <rows> <cols> <depth> <iterations>" << std::endl;
         throw std::invalid_argument("Incorrect number of arguments provided.");
@@ -15,10 +15,22 @@ std::map<std::string, int> getTestArgs(int argc, char *argv[])
 
     try
     {
-        returnMap.emplace("M", std::stoi(argv[1]));
-        returnMap.emplace("N", std::stoi(argv[2]));
-        returnMap.emplace("K", std::stoi(argv[3]));
-        returnMap.emplace("iters", std::stoi(argv[4]));
+        if (argc == 5)
+        {
+            returnMap.emplace("M", std::stoi(argv[1]));
+            returnMap.emplace("N", std::stoi(argv[2]));
+            returnMap.emplace("K", std::stoi(argv[3]));
+            returnMap.emplace("iters", std::stoi(argv[4]));
+            returnMap.emplace("divisions", -1);
+        }
+        else if (argc == 6)
+        {
+            returnMap.emplace("M", std::stoi(argv[1]));
+            returnMap.emplace("N", std::stoi(argv[2]));
+            returnMap.emplace("K", std::stoi(argv[3]));
+            returnMap.emplace("divisions", std::stoi(argv[4]));
+            returnMap.emplace("iters", std::stoi(argv[4]));
+        }
     }
     catch (const std::invalid_argument &e)
     {

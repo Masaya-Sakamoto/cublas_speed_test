@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     std::vector<double> ms_results, memcpy_d2h_results, memcpy_h2d_results;
     cudaEvent_t start, stop;
 
-    // 初期化
+    // initialize cudaEvent
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&warmup, start, stop);
-    Array2Host(h_A, h_B, h_C, d_A, d_B, d_C, M, N, K);
+    Array2Host(h_C, d_C, M, N, K);
 
     for (int i = 0; i < iters; i++)
     {
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         cublasCgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, N, M, K, &d_alpha, d_B, N, d_A, K, &d_beta, d_C, N);
         cudaEventRecord(stop);
         cudaEventSynchronize(stop);
-        auto mem_d2h_result = Array2Host(h_A, h_B, h_C, d_A, d_B, d_C, M, N, K);
+        auto mem_d2h_result = Array2Host(h_C, d_C, M, N, K);
         memcpy_d2h_results.push_back(mem_d2h_result.second);
         float milliseconds = 0;
         cudaEventElapsedTime(&milliseconds, start, stop);
