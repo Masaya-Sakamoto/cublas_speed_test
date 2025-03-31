@@ -2,8 +2,6 @@
 #include <iostream>
 #include "cuda_utils.cuh"
 
-typedef std::pair<cublasHandle_t, cudaStream_t> cudaStreamHandle_t;
-
 int cudaErrorHandle(cudaError_t result)
 {
     if (result == cudaSuccess)
@@ -85,7 +83,6 @@ std::pair<int, float> Arrays2DeviceWithStreams(
 
     // パラメタ設定
     int n = ceil((double)N/divisions);
-    int _N = N;
 
     // 時間測定結果保管用
     float milliseconds = 0;
@@ -149,7 +146,7 @@ std::pair<int, float> Array2Host(
     return std::make_pair(check, milliseconds);
 }
 
-std::pair<int, float> Array2HostWithStreams(
+std::pair<int, float> Arrays2HostWithStreams(
     cuComplex *d_C, cuComplex *h_C,
     int M, int N, int K,
     int divisions, std::vector<cudaStreamHandle_t> &streamHandles)
@@ -167,7 +164,6 @@ std::pair<int, float> Array2HostWithStreams(
 
     // パラメタ設定
     int n = ceil((double)N/divisions);
-    int _N = N;
 
     // 時間測定結果保管用
     float milliseconds = 0;
