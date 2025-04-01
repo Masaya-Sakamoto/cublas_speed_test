@@ -62,7 +62,8 @@ def initialize_parameter_database(db_path):
                 M INTEGER,
                 N INTEGER,
                 K INTEGER,
-                UNIQUE(M, N, K)
+                divisions INTEGER,
+                UNIQUE(M, N, K, divisions)
             )
         ''')
         conn.commit()
@@ -78,13 +79,13 @@ def initialize_parameter_database(db_path):
         if conn:
             conn.close()
 
-def insert_parameter(db_path, M, N, K):
+def insert_parameter(db_path, M, N, K, divisions):
     conn = None
     cursor = None
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO parameters (M, N, K) VALUES (?, ?, ?)', (M, N, K))
+        cursor.execute('INSERT INTO parameters (M, N, K, divisions) VALUES (?, ?, ?, ?)', (M, N, K, divisions))
         parameter_id = cursor.lastrowid
         conn.commit()
         return parameter_id
@@ -102,7 +103,7 @@ def insert_parameter(db_path, M, N, K):
         if conn:
             conn.close()
 
-def initialize_parameters(db_path, m_list, n_list, k_list):
+def initialize_parameters(db_path, m_list, n_list, k_list, divisions_list):
     conn = None
     cursor = None
     
@@ -112,16 +113,17 @@ def initialize_parameters(db_path, m_list, n_list, k_list):
         cursor = conn.cursor()
         
         # Prepare parameters as a list of tuples
-        params = [(M, N, K) for M in m_list for N in n_list for K in k_list]
+        params = [(M, N, K, divisions) for M in m_list for N in n_list for K in k_list for divisions in divisions_list]
         
         # Insert all parameters efficiently, updating if they exist
         cursor.executemany('''
-            INSERT INTO parameters (M, N, K)
-            VALUES (?, ?, ?)
+            INSERT INTO parameters (M, N, K, divisions)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT(M, N, K) DO UPDATE SET
             M = excluded.M,
             N = excluded.N,
-            K = excluded.K
+            K = excluded.K,
+            divisions = excluded.divisions
         ''', params)
         
         # Commit the transaction

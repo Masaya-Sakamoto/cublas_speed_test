@@ -10,10 +10,11 @@ def initialize_from_config():
         m_list = program['init']['init_m_list']
         n_list = program['init']['init_n_list']
         k_list = program['init']['init_k_list']
+        divisions_list = [-1,]
 
         initialize_settings(db_path, program)
         initialize_parameter_database(db_path)
-        initialize_parameters(db_path, m_list, n_list, k_list)
+        initialize_parameters(db_path, m_list, n_list, k_list, divisions_list)
 
 if __name__ == "__main__":
     initialize_from_config()

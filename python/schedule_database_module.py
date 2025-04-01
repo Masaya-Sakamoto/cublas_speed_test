@@ -52,7 +52,7 @@ def list_unregistered_parameters(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT id, M, N, K FROM parameters
+        SELECT id, M, N, K divisions FROM parameters
         WHERE id NOT IN (SELECT parameter_id FROM schedule)
     ''')
     unregistered_parameters = cursor.fetchall()
@@ -64,7 +64,7 @@ def get_parameters_by_id(db_path, parameter_id):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
-        cursor.execute('SELECT M, N, K FROM parameters WHERE id = ?', (parameter_id,))
+        cursor.execute('SELECT M, N, K divisions FROM parameters WHERE id = ?', (parameter_id,))
         result = cursor.fetchone()
         
         if result:
