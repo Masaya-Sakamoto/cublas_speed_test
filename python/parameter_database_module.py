@@ -62,7 +62,7 @@ def initialize_parameter_database(db_path):
                 M INTEGER,
                 N INTEGER,
                 K INTEGER,
-                divisions INTEGER,
+                divisions INTEGER DEFAULT -1,
                 UNIQUE(M, N, K, divisions)
             )
         ''')
@@ -119,7 +119,7 @@ def initialize_parameters(db_path, m_list, n_list, k_list, divisions_list):
         cursor.executemany('''
             INSERT INTO parameters (M, N, K, divisions)
             VALUES (?, ?, ?, ?)
-            ON CONFLICT(M, N, K) DO UPDATE SET
+            ON CONFLICT(M, N, K, divisions) DO UPDATE SET
             M = excluded.M,
             N = excluded.N,
             K = excluded.K,

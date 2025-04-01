@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     auto M = args.at("M");
     auto N = args.at("N");
     auto K = args.at("K");
-    auto divisions = args.at("divisions");
+    // auto divisions = args.at("divisions");
     auto iters = args.at("iters");
 
     // initialize arrays

@@ -1,8 +1,8 @@
 import subprocess
 
-def execute_program(program_path, M, N, K, iterations):
+def execute_program(program_path, M, N, K, divisions, iterations):
     try:
-        command = [program_path, str(M), str(N), str(K), str(iterations)]
+        command = [program_path, str(M), str(N), str(K), str(divisions), str(iterations)]
         result = subprocess.run(command, capture_output=True, text=True, check=True)
 
         if result.stdout.strip() == "" and result.stderr.strip():
