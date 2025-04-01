@@ -82,6 +82,10 @@ def main(program_name, iterations):
                 results = aggregate_results(db_path, parameter_id)
                 store_results(db_path, parameter_id, results)
                 update_status(db_path, exec_id, "completed")
+            except KeyboardInterrupt:
+                logging.info(f"Execution interrupted for parameter_id={parameter_id}")
+                update_status(db_path, exec_id, "unexecuted")
+                raise
             except ValueError as e:
                 logging.warning(f"Skipping invalid parameters parameter_id={parameter_id}: {e}")
                 update_status(db_path, exec_id, "unexecuted")
