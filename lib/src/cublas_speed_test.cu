@@ -132,7 +132,8 @@ int main_part_multiple_stream(int M, int N, int K, int divisions, int iters)
             auto end_point = start_point + n;
             auto _n = end_point < N ? n : N-start_point;
             cublasSetStream(cublasHandle, streams[k]);
-            cudaMemcpyAsync(&d_B[start_point], &h_B[start_point], sizeof(cuComplex) * K * _n, cudaMemcpyHostToDevice, streams[k];
+            cudaMemcpyAsync(&d_B[start_point], &h_B[start_point], sizeof(cuComplex) * K * _n, cudaMemcpyHostToDevice, streams[k]);
+            cudaStreamSynchronize(streams[k]);
             cublasCgemm(
                 cublasHandle,
                 CUBLAS_OP_N,
@@ -141,15 +142,15 @@ int main_part_multiple_stream(int M, int N, int K, int divisions, int iters)
                 M,
                 K,
                 &d_alpha,
-                &d_B[start_point],
+                &d_B[start_point*K],
                 _n,
                 d_A,
                 K,
                 &d_beta,
-                &d_C[start_point], // TODO: fixme: wrong start_point
+                &d_C[k*M], // TODO: fixme: wrong start_point
                 _n
             );
-            cudaMemcpyAsync(&h_C[start_point], &d_C[start_point], sizeof(cuComplex) * K * _n, cudaMemcpyDeviceToHost, streams[k]);
+            cudaMemcpyAsync(&h_C[start_point*M], &d_C[start_point*M], sizeof(cuComplex) * K * _n, cudaMemcpyDeviceToHost, streams[k]);
         }
         // memcpy sync
         for (int k = 0; k < divisions; k++)
